@@ -26,10 +26,8 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+// Removendo as opções depreciadas
+mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB conectado!'))
   .catch(err => {
     console.error('Erro ao conectar ao MongoDB:', err);
