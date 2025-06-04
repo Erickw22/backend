@@ -12,10 +12,10 @@ const app = express();
 const allowedOrigins = ['https://ajudaog.netlify.app'];
 
 app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true  // ✅ Se for usar cookies ou tokens no header
+    origin: 'https://storied-rabanadas-0d3dc6.netlify.app', // OU '*', mas não recomendado para produção
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 
 app.use(express.json());
