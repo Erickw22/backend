@@ -8,34 +8,25 @@ const ongRoutes = require('./routes/ongRoutes');
 
 const app = express();
 
-// ✅ Configuração de CORS
-const allowedOrigins = [
-  'https://ajudaog.netlify.app',
-  'https://storied-rabanadas-0d3dc6.netlify.app'  // <<< Adiciona esse se estiver usando esse domínio também
-];
+// ✅ Configuração de CORS mais segura e compatível com preflight
+const allowedOrigins = ['https://ajudaog.netlify.app'];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  credentials: true  // ✅ Se for usar cookies ou tokens no header
 }));
 
 app.use(express.json());
 
-// ✅ Conexão com MongoDB
 const MONGO_URI = process.env.MONGO_URI;
 if (!MONGO_URI) {
   console.error('Erro: variável de ambiente MONGO_URI não definida!');
   process.exit(1);
 }
 
+// Removendo as opções depreciadas
 mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB conectado!'))
   .catch(err => {
@@ -43,14 +34,11 @@ mongoose.connect(MONGO_URI)
     process.exit(1);
   });
 
-// ✅ Rotas
+// ✅ Suas rotas
 app.use('/ongs', ongRoutes);
 app.use('/auth', authRoutes);
 
-// ✅ Middleware para capturar todas as requisições OPTIONS (preflight)
-app.options('*', cors());
-
-// ✅ Rota não encontrada
+// ✅ Resposta para rota não encontrada
 app.use((req, res) => {
   res.status(404).json({ error: 'Rota não encontrada.' });
 });
@@ -61,8 +49,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Erro interno no servidor' });
 });
 
-// ✅ Inicialização do servidor
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
