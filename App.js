@@ -12,7 +12,7 @@ const app = express();
 const allowedOrigins = ['https://ajudaog.netlify.app'];
 
 app.use(cors({
-    origin: 'https://storied-rabanadas-0d3dc6.netlify.app', 
+    origin: 'https://ajudaong.netlify.app', 
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
