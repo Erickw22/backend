@@ -8,8 +8,14 @@ const ongRoutes = require('./routes/ongRoutes');
 
 const app = express();
 
+// ✅ Configuração de CORS mais segura e compatível com preflight
+const allowedOrigins = ['https://ajudaog.netlify.app'];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*', 
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true  // ✅ Se for usar cookies ou tokens no header
 }));
 
 app.use(express.json());
@@ -30,13 +36,16 @@ mongoose.connect(MONGO_URI, {
     process.exit(1);
   });
 
+// ✅ Suas rotas
 app.use('/ongs', ongRoutes);
 app.use('/auth', authRoutes);
 
+// ✅ Resposta para rota não encontrada
 app.use((req, res) => {
   res.status(404).json({ error: 'Rota não encontrada.' });
 });
 
+// ✅ Tratamento de erros
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Erro interno no servidor' });
